@@ -82,7 +82,6 @@ build() {
 
 package() {
   cd ${pkgname}-${pkgver}
-  sed -i "s;emacs --fg-daemon;/usr/bin/zsh -l -c 'emacs --fg-daemon';" etc/emacs.service
   make DESTDIR="${pkgdir}" install
   find "${pkgdir}"/usr/share/emacs/${pkgver} -exec chown root:root {} \;
 }
