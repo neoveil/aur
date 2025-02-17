@@ -1,7 +1,7 @@
 pkgbase = emacs
 	pkgdesc = GNU Emacs
 	pkgver = 29.4
-	pkgrel = 3
+	pkgrel = 4
 	url = https://www.gnu.org/software/emacs/
 	arch = x86_64
 	license = GPL3

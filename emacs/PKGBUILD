@@ -3,7 +3,7 @@
 
 pkgname=emacs
 pkgver=29.4
-pkgrel=3
+pkgrel=4
 pkgdesc='GNU Emacs'
 arch=('x86_64')
 url='https://www.gnu.org/software/emacs/'
