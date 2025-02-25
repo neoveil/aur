@@ -2,8 +2,8 @@
 # stolen from official arch emacs build @ https://gitlab.archlinux.org/archlinux/packaging/packages/emacs
 
 pkgname=emacs
-pkgver=29.4
-pkgrel=4
+pkgver=30.1
+pkgrel=3
 pkgdesc='GNU Emacs'
 arch=('x86_64')
 url='https://www.gnu.org/software/emacs/'
@@ -11,10 +11,10 @@ license=('GPL3')
 depends=(
   gmp
   gnutls
-  jansson
   lcms2
   libacl.so
   libasound.so
+  libgccjit
   libdbus-1.so
   libfontconfig.so
   libfreetype.so
@@ -39,21 +39,23 @@ depends=(
   libsystemd.so
   libtiff.so
   libtree-sitter.so
+  libwebp.so
   libwebpdemux.so
   libxfixes
   libxml2.so
   m17n-lib
   zlib
-  libgccjit
   webkit2gtk
   mailutils
   imagemagick
 )
+makedepends=(libgccjit)
 source=(https://ftp.gnu.org/gnu/emacs/${pkgname}-${pkgver}.tar.xz)
-sha256sums=('ba897946f94c36600a7e7bb3501d27aa4112d791bfe1445c61ed28550daca235')
+sha256sums=('6ccac1ae76e6af93c6de1df175e8eb406767c23da3dd2a16aa67e3124a6f138f')
 options=(!strip)
 
 build() {
+  export ac_cv_lib_gif_EGifPutExtensionLast=yes
   cd ${pkgname}-${pkgver}
 
   ./autogen.sh
@@ -69,13 +71,11 @@ build() {
     --with-harfbuzz \
     --with-libsystemd \
     --without-compress-install \
-    --with-json \
     --with-mailutils \
     --with-imagemagick \
     --disable-build-details \
     --with-x-toolkit=gtk3 \
-    --with-native-compilation=aot \
-    --program-transform-name='s/\([ec]tags\)/\1.emacs/'
+    --with-native-compilation=aot
 
   make -j$(nproc)
 }
@@ -83,5 +83,8 @@ build() {
 package() {
   cd ${pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install
-  find "${pkgdir}"/usr/share/emacs/${pkgver} -exec chown root:root {} \;
+
+  mv "${pkgdir}"/usr/bin/{ctags,ctags.emacs}
+  mv "${pkgdir}"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
+  chown -R root:root "${pkgdir}/usr/share/emacs/${pkgver}"
 }
